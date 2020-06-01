@@ -217,6 +217,13 @@ void ColorPicker::showPointColor()
 
     if(!image.isNull())
     {
+        //图片缩放后尺寸和label不符
+        if(image.width() > PICSIZE)
+        {
+            int diff = (image.width() - PICSIZE) / 2;
+            image = image.copy(diff, diff, PICSIZE, PICSIZE);
+        }
+
         QColor color = QColor(image.pixel(p));
         int red=color.red();
         int green=color.green();
