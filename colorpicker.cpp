@@ -35,6 +35,23 @@ ColorPicker::~ColorPicker()
 
 bool ColorPicker::eventFilter(QObject *obj, QEvent *env)
 {
+    //程序移动时，m_picSelect跟着移动
+    if(isVisible() && obj == this && env->type() == QEvent::Move)
+    {
+        QMoveEvent* moveEnv = nullptr;
+        moveEnv = (QMoveEvent*)env;
+        if(moveEnv != nullptr && moveEnv->oldPos() != QPoint(0,0))
+        {
+            QPoint p = moveEnv->pos();
+            QPoint oldP = moveEnv->oldPos();
+
+            int x = m_picSelect->x() - oldP.x() + p.x();
+            int y = m_picSelect->y() - oldP.y() + p.y();
+
+            m_picSelect->move(x,y);
+        }
+    }
+    //移动按钮位置获取图片
     if(obj == ui->pushButton)
     {
         if(env->type() == QEvent::MouseButtonPress)
@@ -53,7 +70,7 @@ bool ColorPicker::eventFilter(QObject *obj, QEvent *env)
         }
         else{}
     }
-
+    //在图片中移动位置获取颜色
     if(obj == m_picSelect)
     {
         if(env->type() == QEvent::MouseButtonPress)
